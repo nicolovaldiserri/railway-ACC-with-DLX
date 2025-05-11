@@ -3,7 +3,7 @@ init: 		LHI		R21,0x8000			; set R21 = 0x80000000h (command address)
 			BEQZ	R22,handler			; if (STARTUP == 0) then jump to handler
       									; begin preamble: perform all startup initialization tasks here beacause interrupts are disabled
       									; storage of the incompatibility table
-	LHI		R23,0x0007			; set R23 = 0x00070000h		row 1		1-I
+	    LHI		R23,0x0007			; set R23 = 0x00070000h		row 1		1-I
             ADDUI	R1,R23,0xC024		; set R1  = 0x0007C024h		row 1 		1-I
             LHI		R23,0x000B			; set R23 = 0x000B0000h		row 2		1-II
             ADDUI	R2,R23,0xFFDB		; set R2  = 0x000BFFDBh		row 2		1-II
