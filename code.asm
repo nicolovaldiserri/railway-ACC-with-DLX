@@ -34,38 +34,38 @@ init:       LHI		R21,0x8000			; set R21 = 0x80000000h (command address)
             LHI		R23,0x0006			; set R23 = 0x00060000h		row 20		III-4
             ADDUI	R20,R23,0x33FE		; set R20 = 0x000633FE		row 20		III-4
       									; end of storage
-      		SB		R0,0x0001(R21)		; CS_WRITE_0_STARTUP
+      	    SB		R0,0x0001(R21)		; CS_WRITE_0_STARTUP
       									; end of preamble
-			J		main				; jump to main
+	    J		main				; jump to main
     
-handler:	LW		R24,0x0004(R21)		; CS_READ_C (read interrupt into R24)
-         	LHI		R25,0x0008			; set R25 = 0x00080000h (only the 20th bit is equal to 1)
-         	AND		R26,R24,R25			; turn off all bits except the 20th one which represents Cd1-I_SYNC
-         	BNEZ	R26,R_Cd1I			; if BD19 is equal to 1, the Cd1-I route is managed
-         	LHI		R25,0x0004			; set R25 = 0x00040000h (only the 19th bit is equal to 1)
-         	AND		R26,R24,R25			; turn off all bits except the 19th one which represents Cd1-II_SYNC
-         	BNEZ	R26,R_Cd1II			; if BD18 is equal to 1, the Cd1-II route is managed
-         	...
-         	...
-         	ANDI	R26,R24,0x2000		; turn off all bits except the 14th one which represents Cd2-II_SYNC
-         	BNEZ	R26,R_Cd2II			; if BD13 is equal to 1, the Cd2-II route is managed
-         	...
-         	...
-			RFE							; return to main
+handler:    LW		R24,0x0004(R21)		; CS_READ_C (read interrupt into R24)
+            LHI		R25,0x0008			; set R25 = 0x00080000h (only the 20th bit is equal to 1)
+            AND		R26,R24,R25			; turn off all bits except the 20th one which represents Cd1-I_SYNC
+            BNEZ	R26,R_Cd1I			; if BD19 is equal to 1, the Cd1-I route is managed
+            LHI		R25,0x0004			; set R25 = 0x00040000h (only the 19th bit is equal to 1)
+            AND		R26,R24,R25			; turn off all bits except the 19th one which represents Cd1-II_SYNC
+            BNEZ	R26,R_Cd1II			; if BD18 is equal to 1, the Cd1-II route is managed
+            ...
+            ...
+            ANDI	R26,R24,0x2000		; turn off all bits except the 14th one which represents Cd2-II_SYNC
+            BNEZ	R26,R_Cd2II			; if BD13 is equal to 1, the Cd2-II route is managed
+            ...
+            ...
+	    RFE							; return to main
          
-R_Cd2II:	LW		R30, 0x0008(R21)	; CS_READ_R (read the active itineraries into R30)
-         	AND		R27,R7,R30			; phase R: verification of incompatibilities of 2-II with active itineraries
-       		BEQZ	R27,DEV_Cd2II		; if (R27 == 0) then jump to RUN_Cd2II
-       		SB		R0,0x0002(R21)		; CS_DESTROY_Cd2-II (reset Cd2-II)
-         	LW		R24,0x0004(R21)		; CS_READ_C (read interrupt into R24)
-       		J		handler				; jump to handler
-       									
-RUN_Cd2II:	ADDUI	R28,R0,0x0001		; set R28 = 0x00000001h
-           	SB		R28,0x000C(R21)		; CS_M_DEV1 (with normal operation)
-           	SB		R28,0x000D(R21)		; CS_M_DEV2 (with normal operation)
-			SB		R0,0x0003(R21)		; CS_REGISTRATION_Rd2-II
+R_Cd2II:    LW		R30, 0x0008(R21)	; CS_READ_R (read the active itineraries into R30)
+            AND		R27,R7,R30			; phase R: verification of incompatibilities of 2-II with active itineraries
+       	    BEQZ	R27,DEV_Cd2II		; if (R27 == 0) then jump to RUN_Cd2II
+       	    SB		R0,0x0002(R21)		; CS_DESTROY_Cd2-II (reset Cd2-II)
+            LW		R24,0x0004(R21)		; CS_READ_C (read interrupt into R24)
+       	    J		handler				; jump to handler
+       								
+RUN_Cd2II:  ADDUI	R28,R0,0x0001		; set R28 = 0x00000001h
+            SB		R28,0x000C(R21)		; CS_M_DEV1 (with normal operation)
+            SB		R28,0x000D(R21)		; CS_M_DEV2 (with normal operation)
+	    SB		R0,0x0003(R21)		; CS_REGISTRATION_Rd2-II
 
-           	LW		R24,0x0004(R21)		; CS_READ_C (read interrupt into R24)
-           	J		handler				; jump to handler
+            LW		R24,0x0004(R21)		; CS_READ_C (read interrupt into R24)
+            J		handler				; jump to handler
        
-main:									; DLX routine activities				
+main:						; DLX routine activities				
