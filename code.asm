@@ -47,13 +47,13 @@ handler:    LW		R24,0x0004(R21)       ; CS_READ_C (read interrupt into R24)
             BNEZ	R26,R_Cd1II           ; if BD18 is equal to 1, the Cd1-II route is managed
             ...
             ...
-            ANDI	R26,R24,0x2000		; turn off all bits except the 14th one which represents Cd2-II_SYNC
-            BNEZ	R26,R_Cd2II			; if BD13 is equal to 1, the Cd2-II route is managed
+            ANDI	R26,R24,0x2000        ; turn off all bits except the 14th one which represents Cd2-II_SYNC
+            BNEZ	R26,R_Cd2II           ; if BD13 is equal to 1, the Cd2-II route is managed
             ...
             ...
-	    RFE							; return to main
+	    RFE                               ; return to main
          
-R_Cd2II:    LW		R30, 0x0008(R21)	; CS_READ_R (read the active itineraries into R30)
+R_Cd2II:    LW		R30, 0x0008(R21)      ; CS_READ_R (read the active itineraries into R30)
             AND		R27,R7,R30			; phase R: verification of incompatibilities of 2-II with active itineraries
        	    BEQZ	R27,DEV_Cd2II		; if (R27 == 0) then jump to RUN_Cd2II
        	    SB		R0,0x0002(R21)		; CS_DESTROY_Cd2-II (reset Cd2-II)
