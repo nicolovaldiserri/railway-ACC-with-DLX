@@ -1,6 +1,6 @@
-init: 		LHI		R21,0x8000			; set R21 = 0x80000000h (command address)
-			LBU		R22,0x0000(R21)		; CS_READ_STARTUP (read STARTUP signal into R22)
-			BEQZ	R22,handler			; if (STARTUP == 0) then jump to handler
+init:       LHI		R21,0x8000			; set R21 = 0x80000000h (command address)
+            LBU		R22,0x0000(R21)		; CS_READ_STARTUP (read STARTUP signal into R22)
+            BEQZ	R22,handler			; if (STARTUP == 0) then jump to handler
       									; begin preamble: perform all startup initialization tasks here beacause interrupts are disabled
       									; storage of the incompatibility table
 	    LHI		R23,0x0007			; set R23 = 0x00070000h		row 1		1-I
